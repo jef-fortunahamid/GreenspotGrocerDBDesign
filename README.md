@@ -76,6 +76,7 @@ Based on our requirements, the following tables are proposed:
   - `phone`: The contact number of the customer.
 
 ### Step 3: Entity-Relationship Diagram
+![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/dc0ee13d-a69d-4aaa-b18c-86a7128aa887)
 
 ![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/b138da9b-ccec-4689-937e-46f1783cd8a3)
 
