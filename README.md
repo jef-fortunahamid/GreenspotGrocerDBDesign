@@ -1,7 +1,7 @@
 # Designing a Scalable Database for Greenspot Grocer Using MySQL
 
 ## Business Task
-In my previous SQL project, [Optimising Inventory for Strategic Warehouse Closure at Mint Classics Company](https://github.com/jef-fortunahamid/MintClassicsCo/blob/main/README.md) using basic SQL syntax to answer the business task, to close one storage facility by exploring the company's current inventory and make data-driven recommendations. This time around, I have a more complex challenge - designing a relational database for Greenspot Groced, a rapidly growing online grocery store. the existing data, stored in a `.csv` file, is becoming difficult to manage. My goal is to restucture this data into a scalable MySQL database.
+In my previous SQL project, [Optimising Inventory for Strategic Warehouse Closure at Mint Classics Company](https://github.com/jef-fortunahamid/MintClassicsCo/blob/main/README.md) using basic SQL syntax to answer the business task, to close one storage facility by exploring the company's current inventory and make data-driven recommendations. This time around, I have a more complex challenge - designing a relational database for Greenspot Grocer, a rapidly growing online grocery store. the existing data, stored in a `.csv` file, is becoming difficult to manage. My goal is to restucture this data into a scalable MySQL database.
 
 During this project, I'll be answering the following questions and more:
 - How should the existing data be structured ainto tables?
@@ -41,5 +41,9 @@ The first thing to do is to understand the existing data. As we anlyse our given
 These columns can be grouped into different tables based on their relationships.
 
 ### Step 2: Plan the Database Structure
-After examining the data, ythe next step is tocreate a relationship database plan.
+After examining the data, ythe next step is tocreate a relationship database plan. The following tables come to mind:
+1. Products Table: Will include columns like `Item num`, `description`, `item type`, `Unit`, `Location`, and `cost`.
+2. Inventory Table: Will store `Item num`, `quantity on-hand`, and `purchase date`.
+3. Sales Table: Will capture sales transactions with columns like `Item num`, `date sold`, `customer`, and q`uantity`.
+4. Vendor Table: Will store vendor details like `vendor name` and `vendor address`.
 ![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/c770f742-dfb8-4e67-8d7b-f1b19a89d8bf)
