@@ -43,7 +43,7 @@ These columns can be grouped into different tables based on their relationships.
 ### Step 2: Plan the Database Structure
 After examining the data, the next step is to create a robust relational database plan that allows for scalability and detailes tracking. Looking at the following image we can base our tables on this:
 ![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/c770f742-dfb8-4e67-8d7b-f1b19a89d8bf)
-Based on our requirements, the following tables are propsed:
+Based on our requirements, the following tables are proposed:
 1. `Products` Table: This table will serve as the central repository for all products sold by Greenspot Grocer. Initially using `item num`, this column has been renamed to `item_id` for standardisation. The table will include:
   - `Item num`: The unique identifier for each product. 
   - `description`: A brief description of the product.
@@ -74,6 +74,15 @@ Based on our requirements, the following tables are propsed:
   - `address`: The physical address of the customer.
   - `email`: The email address of the customer.
   - `phone`: The contact number of the customer.
+
+### Step 3: Entity-Relationship Diagram
+
+![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/b138da9b-ccec-4689-937e-46f1783cd8a3)
+
+![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/d5d3064d-a778-4b6b-b21a-acb2905c4da2)
+
+
+Step 4:Populate the Tables
 
 ```sql
 -- Products Table
@@ -125,18 +134,9 @@ CREATE TABLE Customer (
   phone VARCHAR(20) NOT NULL
 );
 ```
-
-Step 3: Entity-Relationship Diagram
-
-![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/b138da9b-ccec-4689-937e-46f1783cd8a3)
-
-![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/d5d3064d-a778-4b6b-b21a-acb2905c4da2)
-
-
-Step :Populate the Tables
 Once the tables are created, the next step is to populate them with the sample data. You can do this using INSERT INTO statements.
 
-Step 4: Test the Design
+Step 5: Test the Design
 To verify the validity of our design, we can write SQL queries using JOIN operations to fetch data across tables:
 
 sql
