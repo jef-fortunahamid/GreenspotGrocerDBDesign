@@ -23,7 +23,7 @@ The following is the sample screenshot of the data provided for our analysis.
 
 ## Analysis
 ### Step 1: Examine the Data
-The first thing to do is to understand the existing data. As we anlyse our given data, in our case, the `.csv` file has 13 columns with various attributes.
+The first thing to do is to understand the existing data. As we analyse our given data, in our case, the `.csv` file has 13 columns with various attributes.
 1. Item num: A numerical identifier for each item (e.g., 1000, 2000).
 2. sdscription: Describes the product (e.g., "Bennet Farm free-range eggs").
 3. quantity on-hand: The amount of the product currently available (e.g., 29, 3).
@@ -57,6 +57,7 @@ Based on our requirements, the following tables are propsed:
   - `item_id`: A reference to the Products table.
   - `quantity_on_hand`: The current stock level of the product.
   - `purchase_date`: The date the product was last purchased or restocked.
+  - `expiry_date`: The date of expiration of products (if applicable).
 3. `Vendor` Table: This table will store details about the vendors from whom Greenspot Grocer purchases products. It will include:
   - `vendor_id`: A unique identifier for each vendor.
   - `vendor_name`: The name of the vendor.
@@ -64,7 +65,7 @@ Based on our requirements, the following tables are propsed:
 4. `Sales` Table: This table will capture sales transactions.
   - `sales_id`: A unique identifier for each sales transaction.
   - `item_id`: A reference to the Products table (renamed from item_num).
-  - `date_sold`: The date of the sale.
+  - `purchase_date`: The date of the sale (replaces the date sold column).
   - `customer_id`: A reference to the Customer table (replaces the cust column).
   - `quantity`: The quantity sold in the transaction.
 5. `Customer` Table: A new table created to replace the cust column in the Sales table. This table will hold customer information.
@@ -74,7 +75,65 @@ Based on our requirements, the following tables are propsed:
   - `email`: The email address of the customer.
   - `phone`: The contact number of the customer.
 
-Step 3: Populate the Tables
+```sql
+-- Products Table
+CREATE TABLE Products (
+  item_id INT PRIMARY KEY AUTO_INCREMENT,
+  description VARCHAR(255) NOT NULL,
+  item_type VARCHAR(50) NOT NULL,
+  unit VARCHAR(50) NOT NULL,
+  location VARCHAR(50) NOT NULL,
+  cost FLOAT NOT NULL,
+  vendor_id INT NOT NULL,
+  FOREIGN KEY (vendor_id) REFERENCES Vendor(vendor_id)
+);
+
+-- Inventory Table
+CREATE TABLE Inventory (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  item_id INT NOT NULL,
+  quantity_on_hand INT NOT NULL,
+  purchase_date DATE NOT NULL,
+  expiry_date DATE,
+  FOREIGN KEY (item_id) REFERENCES Products(item_id)
+);
+
+-- Vendor Table
+CREATE TABLE Vendor (
+  vendor_id INT PRIMARY KEY AUTO_INCREMENT,
+  vendor_name VARCHAR(255) NOT NULL,
+  vendor_address VARCHAR(255) NOT NULL
+);
+
+-- Sales Table
+CREATE TABLE Sales (
+  sales_id INT PRIMARY KEY AUTO_INCREMENT,
+  item_id INT NOT NULL,
+  purchase_date DATE NOT NULL,
+  customer_id INT NOT NULL,
+  quantity INT NOT NULL,
+  FOREIGN KEY (item_id) REFERENCES Products(item_id),
+  FOREIGN KEY (customer_id) REFERENCES Customer(customer_id)
+);
+
+-- Customer Table
+CREATE TABLE Customer (
+  customer_id INT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  address VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  phone VARCHAR(20) NOT NULL
+);
+```
+
+Step 3: Entity-Relationship Diagram
+
+![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/b138da9b-ccec-4689-937e-46f1783cd8a3)
+
+![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/d5d3064d-a778-4b6b-b21a-acb2905c4da2)
+
+
+Step :Populate the Tables
 Once the tables are created, the next step is to populate them with the sample data. You can do this using INSERT INTO statements.
 
 Step 4: Test the Design
