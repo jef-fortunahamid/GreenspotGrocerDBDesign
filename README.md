@@ -1,7 +1,7 @@
 # Designing a Scalable Database for Greenspot Grocer Using MySQL
 
 ## Business Task
-In my previous SQL project, [Optimising Inventory for Strategic Warehouse Closure at Mint Classics Company](https://github.com/jef-fortunahamid/MintClassicsCo/blob/main/README.md) using basic SQL syntax to answer the business task, to close one storage facility by exploring the company's current inventory and make data-driven recommendations. This time around, I have a more complex challenge - designing a relational database for Greenspot Grocer, a rapidly growing online grocery store. the existing data, stored in a `.csv` file, is becoming difficult to manage. My goal is to restucture this data into a scalable MySQL database.
+In my previous SQL project, [Optimising Inventory for Strategic Warehouse Closure at Mint Classics Company](https://github.com/jef-fortunahamid/MintClassicsCo/blob/main/README.md) using basic SQL syntax to answer the business task, to close one storage facility by exploring the company's current inventory and make data-driven recommendations. This time around, I have a more complex challenge - designing a relational database for Greenspot Grocer, a rapidly growing online grocery store. The existing data, stored in a `.csv` file, is becoming difficult to manage. My goal is to restructure this data into a scalable MySQL database.
 
 During this project, I'll be answering the following questions and more:
 - How should the existing data be structured ainto tables?
@@ -41,7 +41,7 @@ The first thing to do is to understand the existing data. As we analyse our give
 These columns can be grouped into different tables based on their relationships.
 
 ### Step 2: Plan the Database Structure
-After examining the data, the next step is to create a robust relational database plan that allows for scalability and detailes tracking. Looking at the following image we can base our tables on this:
+After examining the data, the next step is to create a robust relational database plan that allows for scalability and detailed tracking. Looking at the following image we can base our tables on this:
 ![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/c770f742-dfb8-4e67-8d7b-f1b19a89d8bf)
 Based on our requirements, the following tables are proposed:
 1. `Products` Table: This table will serve as the central repository for all products sold by Greenspot Grocer. Initially using `item num`, this column has been renamed to `item_id` for standardisation. The table will include:
@@ -78,7 +78,7 @@ Based on our requirements, the following tables are proposed:
   - `phone`: The contact number of the customer.
 
 ### Step 3: Design the Enhanced Entity-Relationship (EER) Diagram and Establish Relationships
-After carefully examining the data and idetifying the key entities, we utilized MySQL Workbench's EER Diagram Builder to create an Enhanced Entity-Relationship (EER) Diagram. This graphical tool allowed us to drag and drop tables, fields, and establish relationships using crow's foot notation (one of the ways to show relationship), offering a visual blueprint for our database structure. The EER Diagram serves as a comprehensive yet easy-to-understand representation of our tables and the relationships between them.
+After carefully examining the data and identifying the key entities, we utilized MySQL Workbench's EER Diagram Builder to create an Enhanced Entity-Relationship (EER) Diagram. This graphical tool allowed us to drag and drop tables, fields, and establish relationships using crow's foot notation (one of the ways to show relationships), offering a visual blueprint for our database structure. The EER Diagram serves as a comprehensive yet easy-to-understand representation of our tables and the relationships between them.
 ![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/dc0ee13d-a69d-4aaa-b18c-86a7128aa887)
 
 #### Establishing Relationships
@@ -88,11 +88,11 @@ We used the Crow's Foot notation to establish the following relationships betwee
 3. **Products to Sales**: A *one-to-many* relationship. One product can be part of multiple sales transactions, but each sales transaction involves one and only one product. The `item_id` in the `Sales` table serves as the foreign key linking back to the `Products` table.
 4. **Customer to Sales**: A *one-to-many* relationship. A customer can make multiple purchases, but each sales transaction is made by one and only one customer. This is managed through the `customer_id` foreign key in the `Sales` table.
 
-These relationships are accurately represented in the EER Diagram, which ensures that our database will have referential integrity. This design will also make it easier to write SQL queries to retrieve and manipulate data, as it clearly defines how data in various tables is interconnected.21
+These relationships are accurately represented in the EER Diagram, which ensures that our database will have referential integrity. This design will also make it easier to write SQL queries to retrieve and manipulate data, as it clearly defines how data in various tables is interconnected.
 ![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/d5d3064d-a778-4b6b-b21a-acb2905c4da2)
 
 ### Step 4: Create and Populate the Tables
-After successfully designing the EER Diagram, the next step is to implement this database structure in MySQL Workbench. Here's how to go about it:
+After successfully designing the EER Diagram, the next step is to implement this database structure in MySQL Workbench. Here's how to go about it.
 
 **Create a New Schema**: This is simply creating our database, we will name it as `GreenspotGrocerDB`. Right-click on the "Schemas" pane (left side of the workbench) and choose "Create Schema" and this will pop out:
 ![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/fc44f9d9-9b19-4d08-8c48-565fdc10522e)
@@ -337,18 +337,18 @@ DELIMITER ;
 ```
 This trigger will execute  after a new record is inserted into the `Sales` table. It will automatically decrease the `quantity_on_hand` for the corresponding `iten_id` in the `Inventory` table by the `quantity` sold.
 
-The second problem, this is particularly important for perishable items where we might want to sell the oldest stock first (FIFO - First In, First Out). We'll need more advanced logic to handle sales transactions. We need a Trigger with  loop through the inventory records for the sold item.
+The second problem, this is particularly important for perishable items where we might want to sell the oldest stock first (FIFO - First In, First Out). We'll need more advanced logic to handle sales transactions. We need a Trigger with a loop through the inventory records for the sold item.
 
 ### Conclusion
 **The Process**
 The task at hand was to design and implement a database for Greenspot Grocer, a rapidly growing, family-owned online grocery store. The journey started with an understanding of the business requirements and the current data structure,followed by database planning, design, and finally, implementation using MySQL workbench. One of the unique aspects of this project was the use of MySQL Workbench's EER Diagram builder to visually design the database structure. It's an invaluable tool for quickly sketching out relationships and ensuring that the tables are well-organised.
 
 **Challenges and Solutions**
-One of the most significant challenges was dealing with inventory management, especially whan handling multiple batches of the same item. The challenge was to ensure that the sales transactions correctly updated  the inventory, accounting for various purchase andnexpiry dates. After some brainstorming, we concluded that a SQL Trigger would be the most efficient way to handle this, ensuring that the items are sold in a FIFO manner. This is especially critical for perishable items.
+One of the most significant challenges was dealing with inventory management, especially whan handling multiple batches of the same item. The challenge was to ensure that the sales transactions correctly updated  the inventory, accounting for various purchase and expiry dates. After some brainstorming, we concluded that an SQL Trigger would be the most efficient way to handle this, ensuring that the items are sold in a FIFO manner. This is especially critical for perishable items.
 
 Another challenge was data normalisation and ensuring the database is scalable. A `Customer` table was intoduced to replace the customer column in the `Sales` table. The item identifiers were standardised across tables, and additional columns were added to capture sales transactions more comprehensively.
 
 **Sugestions for Future Improvements**
-For future business endeavous, a dedicated table could be introduced to capture promotional offers and discounts. Additionally, data analytics tools could be integrated for real-time sales and inventory tracking. Furthermore, a column to track the 'source' of the sales (e.g. online, in-store, promotional event) could provide valuable insights for marketing strategies.
+For future business endeavours, a dedicated table could be introduced to capture promotional offers and discounts. Additionally, data analytics tools could be integrated for real-time sales and inventory tracking. Furthermore, a column to track the 'source' of the sales (e.g. online, in-store, promotional event) could provide valuable insights for marketing strategies.
 
 By combining technical prowess with a deep understanding of the business requirements, this project serves as a robust solution for Greenspot Grocer's database needs. Thank you for taking the time to review this project. 
