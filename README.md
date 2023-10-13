@@ -14,8 +14,8 @@ To accomplish this tasks, I will use various SQL features, including:
 - `CREATE TABLE`
 - `PRIMARY KEY` and `FOREIGN KEY`
 - `INSERT INTO`
--  `SELECT`
--  `JOIN`
+- `SELECT`
+- `JOIN`
 
 ## Data
 The following is the sample screenshot of the data provided for our analysis.
@@ -97,13 +97,14 @@ After successfully designing the EER Diagram, the next step is to implement this
 **Create a New Schema**: This is simply creating our database, we will name it as `GreenspotGrocerDB`. Right-click on the "Schemas" pane (left side of the workbench) and choose "Create Schema" and this will pop out:
 ![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/fc44f9d9-9b19-4d08-8c48-565fdc10522e)
 Press "Apply". You can easily see this new database under the "Schema" pane.
+
 ![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/e774e2d6-d62a-4ef6-93fc-30b04c1575ee)
 
 **Create Tables**: Now, we'll proceed to run a series of queries to create our five tables. We need to take note of our database structure that we used to built our EER Diagram. However, before we proceed to run `CREATE TABLE` queries, we need to run this query:
 ```sql
 USE GreenspotGrocerDB;
 ```
-This is to ensure that we are running our queries on the correct database, this is especially required is we have other databases installed in our server.
+This is to ensure that we are running our queries on the correct database, this is especially required if we have other databases installed in our server.
 
 Now we run the following queries to create our table:
 ```sql
@@ -170,20 +171,20 @@ Once the tables are created, the next step is to populate them with the sample d
 ```sql
 -- Insert data into Vendor Table
 INSERT INTO Vendor (vendor_name, vendor_address) VALUES
-  ("Bennet Farms", "Rt. 17 Evansville, IL 55446")
-, ("Freshness, Inc.", "202 E. Maple St., St. Joseph, MO 45678")
-, ("Ruby Redd Produce, LLC", "1212 Milam St., Kenosha, AL, 34567")
+  ('Bennet Farms', 'Rt. 17 Evansville, IL 55446')
+, ('Freshness, Inc.', '202 E. Maple St., St. Joseph, MO 45678')
+, ('Ruby Redd Produce, LLC', '1212 Milam St., Kenosha, AL, 34567')
 ;
 
 -- Insert data into Products Table
 INSERT INTO Products (item_id, description, item_type, unit, location, cost, vendor_id) VALUES
-  (1000, "Bennet Farm free-range eggs", "Dairy", "dozen", "D12", 2.35, 1)
-, (2000, "Ruby's Kale", "Produce", "bunch", "p12", 1.29, 3)
-, (1100, "Freshness White beans", "Canned", "12 ounce can", "a2", 0.69, 2)
-, (1222, "Freshness Green beans", "Canned", "12 ounce can", "a3", 0.59, 2)
-, (1223, "Freshness Green beans", "Canned", "36 ounce can", "a7", 1.75, 2)
-, (1224, "Freshness Wax beans", "Canned", "12 ounce can", "a3", 0.65, 2)
-, (2001, "Ruby's Organic Kale", "Produce", "bunch", "po2", 2.19, 3)
+  (1000, 'Bennet Farm free-range eggs', 'Dairy', 'dozen', 'D12', 2.35, 1)
+, (2000, "Ruby's Kale", 'Produce', 'bunch', 'p12', 1.29, 3)
+, (1100, 'Freshness White beans', 'Canned', '12 ounce can', 'a2', 0.69, 2)
+, (1222, 'Freshness Green beans', 'Canned', '12 ounce can', 'a3', 0.59, 2)
+, (1223, 'Freshness Green beans', 'Canned', '36 ounce can', 'a7', 1.75, 2)
+, (1224, 'Freshness Wax beans', 'Canned', '12 ounce can', 'a3', 0.65, 2)
+, (2001, "Ruby's Organic Kale", 'Produce', 'bunch', 'po2', 2.19, 3)
 ;
 
 -- Insert data into Inventory Table
@@ -191,23 +192,68 @@ INSERT INTO Inventory (item_id, quantity_on_hand, purchase_date, expiry_date) VA
   (1000, 29, '2022-02-01', NULL)
 , (1100, 53, '2022-02-02', NULL)
 , (2000, 3, '2022-02-12', NULL)
-, (1222, 59, 2022-02-10, NULL)
-, 
+, (1222, 59, '2022-02-10', NULL)
+, (1223, 12, '2022-02-10', NULL)
+, (1224, 31, '2022-02-10', NULL)
+, (2000, 28, '2022-01-12', NULL)
+, (2001, 20, '2022-02-12', NULL)
+, (1223, 17, '2022-02-15', NULL)
 ;
 
 -- Insert data into Sales Table
 INSERT INTO Sales (item_id, date_sold, customer_id, quantity, price, total_amount) VALUES
-(1000, '2022-02-02', 198765, 2, 5.49, 10.98),
-(2000, '2022-02-02', NULL, 2, 3.99, 7.98),
-(1100, '2022-02-02', 202900, 2, 1.49, 2.98),
+  (1000, '2022-02-02', 198765, 2, 5.49, 10.98)
+, (1100, '2022-02-02', 202900, 2, 1.49, 2.98)
+, (1000, '2022-02-04', 196777, 2, 5.99, 11.98)
+, (1000, '2022-02-11', 277177, 4, 5.49, 10.98)
+, (1222, '2022-02-12', 111000, 12, 1.29, 15.48)
+, (1223, '2022-02-13', 198765, 5, 3.49, 17.45)
+, (2001, '2022-02-13', 100988, 1, 6.99, 6.99)
+, (2001, '2022-02-14', 202900, 12, 6.99,83.88)
+, (2000, '2022-02-15', 111000, 2, 3.99, 7.98)
+;
 
 -- Insert data into Customer Table
 INSERT INTO Customer (customer_id, name, address, email, phone) VALUES
-(111000, 'John Bailes', 'Bridgetown, WA 6255', 'john.b@google.com', 0897665511),
-(198765, 'Gary Smith', 'Perth, WA 6100', 'gary.smith@yahoo.com', 0477558114),
-(202900, 'Laura Gale', 'Mandurah, WA 6210', 'l.gale01@google.com', 0422111555),
-(196777, 'Ian Walker', 'Perth, Wa 6100', 'iwalker10@hotmail.com', 0499885512);
+  (111000, 'John Bailes', 'Bridgetown, WA 6255', 'john.b@google.com', 0897665511)
+, (198765, 'Gary Smith', 'Perth, WA 6100', 'gary.smith@yahoo.com', 0477558114)
+, (202900, 'Laura Gale', 'Mandurah, WA 6210', 'l.gale01@google.com', 0422111555)
+, (196777, 'Ian Walker', 'Perth, Wa 6100', 'iwalker10@hotmail.com', 0499885512)
+, (277177, 'Belinda Dole', 'Mandurah, WA 6210', 'beldole@google.com', 0897112258)
+, (100988, 'Sandra Park', 'Perth, WA 6100', 's.park@yahoo.com', 0897075454)
+;
 ```
+We'll check each table.
+```sql
+SELECT *
+FROM vendor;
+```
+![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/0e3b4aed-e09c-45bc-9b74-30beca63e3a7)
+
+```sql
+SELECT *
+FROM products;
+```
+![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/0702fa66-0a59-4cd8-91b6-e59f471f786e)
+
+```sql
+SELECT *
+FROM inventory;
+```
+![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/3b6748a8-4ee0-4b31-9d96-0fb57d45c80d)
+
+```sql
+SELECT *
+FROM sales;
+```
+![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/234ae010-42c4-40b8-8fa3-38bfc165b262)
+
+```sql
+SELECT *
+FROM customer;
+```
+![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/3dbd0a99-336e-4bd9-a896-7061c3e857d9)
+
 
 Step 5: Test the Design
 To verify the validity of our design, we can write SQL queries using JOIN operations to fetch data across tables:
