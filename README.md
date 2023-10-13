@@ -16,6 +16,7 @@ To accomplish this tasks, I will use various SQL features, including:
 - `INSERT INTO`
 - `SELECT`
 - `JOIN`
+- `TRIGGER`
 
 ## Data
 The following is the sample screenshot of the data provided for our analysis.
