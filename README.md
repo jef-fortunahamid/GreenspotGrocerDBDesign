@@ -91,7 +91,7 @@ We used the Crow's Foot notation to establish the following relationships betwee
 These relationships are accurately represented in the EER Diagram, which ensures that our database will have referential integrity. This design will also make it easier to write SQL queries to retrieve and manipulate data, as it clearly defines how data in various tables is interconnected.21
 ![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/d5d3064d-a778-4b6b-b21a-acb2905c4da2)
 
-### Step 4:Populate the Tables
+### Step 4: Create and Populate the Tables
 After successfully designing the EER Diagram, the next step is to implement this database structure in MySQL Workbench. Here's how to go about it:
 
 **Create a New Schema**: This is simply creating our database, we will name it as `GreenspotGrocerDB`. Right-click on the "Schemas" pane (left side of the workbench) and choose "Create Schema" and this will pop out:
@@ -255,21 +255,100 @@ FROM customer;
 ![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/3dbd0a99-336e-4bd9-a896-7061c3e857d9)
 
 
-Step 5: Test the Design
+### Step 5: Test the Database Design
 To verify the validity of our design, we can write SQL queries using JOIN operations to fetch data across tables:
+```sql
+-- Fetch details of total sales from each customer
+SELECT
+    c.customer_id
+  , c.name
+  , ROUND(SUM(s.total_amount), 2) AS total_amount_purchase
+FROM sales s 
+  JOIN customer c
+    ON s.customer_id = c.customer_id
+GROUP BY
+    c.customer_id
+  , c.name
+;
+```
+![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/27f7596a-97e1-4da7-9037-ef51faa4ae5f)
 
-sql
-Copy code
--- Fetch details of items sold on a particular date
-SELECT Products.description, Sales.date_sold, Sales.quantity
-FROM Products
-JOIN Sales ON Products.item_num = Sales.item_num
-WHERE Sales.date_sold = '2022-02-02';
-My Insights
+```sql
+-- Fetch details of items sold at which date
+SELECT
+    p.item_id
+  , p.description
+  , s.date_sold
+  , s.quantity
+FROM products p 
+  JOIN sales s 
+    ON p.item_id = s.item_id
+ORDER BY
+  date_sold
+;
+```
+![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/cc942d65-d11e-4f88-85ca-6566bb30bc19)
 
-Restructured the messy .csv data into four well-defined tables.
-Established relationships between these tables through PRIMARY and FOREIGN KEYS.
-Created a database design that not only accommodates the current data but is also scalable for future growth.
-By utilizing MySQL and SQL queries, I've designed a robust and scalable database for Greenspot Grocer. This will help them immensely as they continue to grow.
+```sql
+-- Fetch details about the latest purchased order from each vendor(supplier) on each item
+SELECT
+    v.vendor_name
+  , p.item_id
+  , p.description
+  , i.quantity_on_hand
+  , MAX(i.purchase_date) AS latest_order_date
+FROM products p
+  JOIN vendor v
+    ON p.vendor_id = v.vendor_id
+  JOIN inventory i 
+    ON p.item_id = i.item_id
+GROUP BY
+    v.vendor_name
+  , p.item_id
+  , p.description
+  , i.quantity_on_hand
+;
+```
+![image](https://github.com/jef-fortunahamid/GreenspotGrocerDBDesign/assets/125134025/5a70e6e6-3c4b-4ecf-937c-c8c93d77f0a1)
 
-Thank you for reading my SQL Database Design project! If you found this helpful and want to know more about my work, feel free to check out other projects in my LinkedIn featured section.
+These queries proved that our database design is sound, that the tables and table relationships we have selected can allow then retrieval of data from all the tables in the database.
+
+While checking this database, we ran into two main issues:
+- How can the database automatically update the number of items left in stock when we sell something?
+- What can we do when we have more than one set of the same item (like from different shipments or batches) in our stock? How do we make sure sales are counted correctly for each one?
+
+To solve these problems, let's discuss one problem at a time.
+
+First problem, the database structure we've designed will support the basic operations of storing and tracking sales and inventory, but we woulkd need additional logic to automatically update the `quantity_on_hand` in the `Inventory` table when a sale is made. We can do this using SQL Triggers.
+
+Here's an example:
+```sql
+DELIMITER //
+CREATE TRIGGER after_sales_insert
+AFTER INSERT
+ON Sales FOR EACH ROW
+BEGIN
+  UPDATE Inventory
+  SET quantity_on_hand = quantity_on_hand - NEW.quantity
+  WHERE item_id - NEW.item_id;
+END;
+//
+DELIMITER ;
+```
+This trigger will execute  after a new record is inserted into the `Sales` table. It will automatically decrease the `quantity_on_hand` for the corresponding `iten_id` in the `Inventory` table by the `quantity` sold.
+
+The second problem, this is particularly important for perishable items where we might want to sell the oldest stock first (FIFO - First In, First Out). We'll need more advanced logic to handle sales transactions. We need a Trigger with  loop through the inventory records for the sold item.
+
+### Conclusion
+**The Process**
+The task at hand was to design and implement a database for Greenspot Grocer, a rapidly growing, family-owned online grocery store. The journey started with an understanding of the business requirements and the current data structure,followed by database planning, design, and finally, implementation using MySQL workbench. One of the unique aspects of this project was the use of MySQL Workbench's EER Diagram builder to visually design the database structure. It's an invaluable tool for quickly sketching out relationships and ensuring that the tables are well-organised.
+
+**Challenges and Solutions**
+One of the most significant challenges was dealing with inventory management, especially whan handling multiple batches of the same item. The challenge was to ensure that the sales transactions correctly updated  the inventory, accounting for various purchase andnexpiry dates. After some brainstorming, we concluded that a SQL Trigger would be the most efficient way to handle this, ensuring that the items are sold in a FIFO manner. This is especially critical for perishable items.
+
+Another challenge was data normalisation and ensuring the database is scalable. A `Customer` table was intoduced to replace the customer column in the `Sales` table. The item identifiers were standardised across tables, and additional columns were added to capture sales transactions more comprehensively.
+
+**Sugestions for Future Improvements**
+For future business endeavous, a dedicated table could be introduced to capture promotional offers and discounts. Additionally, data analytics tools could be integrated for real-time sales and inventory tracking. Furthermore, a column to track the 'source' of the sales (e.g. online, in-store, promotional event) could provide valuable insights for marketing strategies.
+
+By combining technical prowess with a deep understanding of the business requirements, this project serves as a robust solution for Greenspot Grocer's database needs. Thank you for taking the time to review this project. 
