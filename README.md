@@ -9,6 +9,8 @@ During this project, I'll be answering the following questions and more:
 - Can the design handle future scaling needs?
 - How can the design be verified?
 
+*All data related to the case study were obtained from Coursera.*
+
 ## Techniques
 To accomplish this tasks, I will use various SQL features, including:
 - `CREATE TABLE`
